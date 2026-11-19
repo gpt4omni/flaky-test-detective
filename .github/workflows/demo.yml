@@ -1,0 +1,94 @@
+name: Flaky Test Detective Demo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+jobs:
+  test-shards:
+    name: Run tests (shard ${{ matrix.shard }}/2)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run sharded unit tests and emit JUnit XML + metadata
+        run: |
+          python3 tests/run_with_junit.py \
+            --junit-out "test-results/junit-shard-${{ matrix.shard }}.xml" \
+            --shard-index "${{ matrix.shard }}" \
+            --shard-total 2 \
+            --seed "$((40 + ${{ matrix.shard }}))"
+
+      - name: Upload shard JUnit XML and metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-shard-${{ matrix.shard }}
+          path: test-results/
+
+  aggregate-and-detect:
+    name: Aggregate shards & detect flakes
+    needs: [test-shards]
+    if: always()
+    runs-on: ubuntu-latest
+    # Serialize state aggregation across parallel runs to avoid write races
+    concurrency:
+      group: flaky-detective-aggregator-${{ github.ref }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download all shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: junit-shard-*
+          path: shard-results
+          merge-multiple: true
+
+      - name: Run Flaky Test Detective on live shard results
+        id: live
+        uses: ./
+        with:
+          junit-glob: "shard-results/junit-*.xml"
+          state-file: ".flaky-detective/live-state.json"
+          post-pr-comment: "true"
+          write-summary: "true"
+
+      - name: Run Flaky Test Detective on sample multi-shard demo fixtures
+        id: sample
+        uses: ./
+        with:
+          junit-glob: "examples/demo-run/junit-*.xml"
+          state-file: ".flaky-detective/demo-state.json"
+          post-pr-comment: "false"
+          write-summary: "true"
+
+      - name: Verify demo outputs
+        run: |
+          echo "Live shard files parsed: ${{ steps.live.outputs.parsed-files }}"
+          echo "Live flaky tests: ${{ steps.live.outputs.flaky-count }}"
+          echo "Demo fixture flaky tests detected: ${{ steps.sample.outputs.flaky-count }}"
+          test "${{ steps.sample.outputs.flaky-count }}" -ge 2

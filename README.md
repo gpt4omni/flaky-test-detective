@@ -32,3 +32,17 @@ Flagged tests are rerun alone and in original order to confirm shared-state flak
 
 ## Rollout
 Dogfood on my own repo, then open-source maintainers, then the GitHub Marketplace.
+
+## Quick Start
+
+Drop the action into any workflow that produces JUnit XML:
+
+```yaml
+- name: Detect flaky tests
+  if: always()
+  uses: gpt4omni/flaky-test-detective@main
+  with:
+    junit-glob: "**/junit*.xml"
+```
+
+See [`.github/workflows/demo.yml`](.github/workflows/demo.yml) for a full parallel-shard + serialized-aggregator demo workflow.

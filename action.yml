@@ -1,0 +1,71 @@
+name: "Flaky Test Detective"
+description: "Detect flaky tests from same-SHA re-runs and JUnit XML, track rolling flake rates, and comment on PRs."
+author: "gpt4omni"
+
+branding:
+  icon: "search"
+  color: "yellow"
+
+inputs:
+  junit-glob:
+    description: "Glob pattern to discover JUnit XML reports."
+    required: false
+    default: "**/junit*.xml"
+  state-file:
+    description: "Path to the rolling JSON flake state file."
+    required: false
+    default: ".flaky-detective/state.json"
+  window-size:
+    description: "Rolling history window per test."
+    required: false
+    default: "200"
+  post-pr-comment:
+    description: "Post or update a sticky PR comment when flaky tests are detected."
+    required: false
+    default: "true"
+  write-summary:
+    description: "Write Markdown report to the GitHub Actions job summary."
+    required: false
+    default: "true"
+  github-token:
+    description: "GitHub token for same-SHA run lookup and PR comments."
+    required: false
+    default: "${{ github.token }}"
+
+outputs:
+  flaky-count:
+    description: "Number of currently tracked flaky tests."
+    value: ${{ steps.detect.outputs.flaky-count }}
+  matched-known-flakes:
+    description: "Number of current failures matching a known flaky test."
+    value: ${{ steps.detect.outputs.matched-known-flakes }}
+  parsed-files:
+    description: "Number of JUnit XML files parsed."
+    value: ${{ steps.detect.outputs.parsed-files }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Flaky Test Detective
+      id: detect
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        INPUT_JUNIT_GLOB: ${{ inputs.junit-glob }}
+        INPUT_STATE_FILE: ${{ inputs.state-file }}
+        INPUT_WINDOW_SIZE: ${{ inputs.window-size }}
+        INPUT_POST_PR_COMMENT: ${{ inputs.post-pr-comment }}
+        INPUT_WRITE_SUMMARY: ${{ inputs.write-summary }}
+      run: |
+        args=(
+          --junit-glob "$INPUT_JUNIT_GLOB"
+          --state-file "$INPUT_STATE_FILE"
+          --window-size "$INPUT_WINDOW_SIZE"
+        )
+        if [ "$INPUT_POST_PR_COMMENT" = "true" ]; then
+          args+=(--post-pr-comment)
+        fi
+        if [ "$INPUT_WRITE_SUMMARY" = "true" ]; then
+          args+=(--write-summary)
+        fi
+        python3 "${{ github.action_path }}/src/detective.py" "${args[@]}"

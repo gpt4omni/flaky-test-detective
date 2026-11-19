@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuite name="shard-2" tests="2" failures="0" errors="0" skipped="0">
+  <testcase classname="tests.test_session" name="test_shared_temp_socket" time="0.095" />
+  <testcase classname="tests.test_pricing" name="test_discount_math" time="0.011" />
+</testsuite>

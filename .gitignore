@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.flaky-detective/
+test-results/
+shard-results/

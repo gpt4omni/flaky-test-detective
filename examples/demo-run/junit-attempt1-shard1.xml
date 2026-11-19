@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuite name="shard-1" tests="3" failures="2" errors="0" skipped="0">
+  <testcase classname="tests.test_checkout" name="test_concurrent_cart_lock" time="0.412">
+    <failure message="TimeoutError: lock acquisition exceeded 200ms">AssertionError in cart_lock</failure>
+  </testcase>
+  <testcase classname="tests.test_session" name="test_shared_temp_socket" time="0.188">
+    <failure message="OSError: [Errno 98] Address already in use: /tmp/app.sock">OSError in test_session</failure>
+  </testcase>
+  <testcase classname="tests.test_pricing" name="test_discount_math" time="0.012" />
+</testsuite>

@@ -1,0 +1,8 @@
+{
+  "commit_sha": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678",
+  "run_id": "1001",
+  "run_attempt": 1,
+  "shard": "shard-2",
+  "runner_id": "ubuntu-latest-2",
+  "seed": "99"
+}
