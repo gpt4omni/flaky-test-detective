@@ -39,6 +39,7 @@ class TestObservation:
     runner_id: str = ""
     seed: str = ""
     test_order: int = 0
+    source_report: str = ""
     timestamp: str = field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
@@ -74,7 +75,12 @@ def parse_junit_file(
     runner_id = str(meta.get("runner_id") or default_runner_id)
     seed = str(meta.get("seed") or default_seed)
 
-    tree = ET.parse(xml_path)
+    try:
+        tree = ET.parse(xml_path)
+    except ET.ParseError as exc:
+        filename = str(xml_path).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A').replace(',', '%2C').replace(':', '%3A')
+        print(f"::warning file={filename}::Invalid JUnit XML: {exc}")
+        return []
     root = tree.getroot()
 
     testcases: list[ET.Element] = []
@@ -122,6 +128,7 @@ def parse_junit_file(
                 runner_id=runner_id,
                 seed=seed,
                 test_order=idx,
+                source_report=str(xml_path),
             )
         )
     return observations
@@ -167,6 +174,14 @@ def classify_flake(history: list[dict[str, Any]]) -> str:
     return "timing/race"
 
 
+def observation_identity(entry: dict[str, Any]) -> tuple:
+    return (
+        entry.get("commit_sha"), entry.get("run_id"),
+        entry.get("run_attempt"), entry.get("shard"),
+        entry.get("source_report", ""), entry.get("test_order", 0),
+    )
+
+
 def update_state(
     state: dict[str, Any],
     observations: list[TestObservation],
@@ -203,10 +218,13 @@ def update_state(
             "runner_id": obs.runner_id,
             "seed": obs.seed,
             "test_order": obs.test_order,
+            "source_report": obs.source_report,
             "duration_sec": obs.duration_sec,
             "timestamp": obs.timestamp,
         }
         history: list[dict[str, Any]] = record["history"]
+        if any(observation_identity(h) == observation_identity(entry) for h in history):
+            continue
         history.append(entry)
         if len(history) > window_size:
             history[:] = history[-window_size:]
@@ -391,13 +409,18 @@ def upsert_pr_comment(
     list_url = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments?per_page=100"
     existing_id: int | None = None
     try:
-        req = urllib.request.Request(list_url, headers=headers)
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            comments = json.loads(resp.read().decode("utf-8"))
-        for c in comments:
-            if STICKY_MARKER in (c.get("body") or ""):
-                existing_id = int(c["id"])
+        page = 1
+        while True:
+            req = urllib.request.Request(f"{list_url}&page={page}", headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                comments = json.loads(resp.read().decode("utf-8"))
+            for c in comments:
+                if STICKY_MARKER in (c.get("body") or ""):
+                    existing_id = int(c["id"])
+                    break
+            if existing_id is not None or len(comments) < 100:
                 break
+            page += 1
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
         return False
 
@@ -490,6 +513,7 @@ def main(argv: list[str] | None = None) -> int:
         default="",
         help="Optional path to write the rendered Markdown report",
     )
+    parser.add_argument("--fail-on-unexplained", action="store_true")
     args = parser.parse_args(argv)
 
     matched_files = sorted(
@@ -523,6 +547,10 @@ def main(argv: list[str] | None = None) -> int:
     save_state(state_path, state)
 
     current_failures = [o for o in observations if o.outcome == "failed"]
+    unexplained = sum(
+        not state["tests"].get(o.test_id, {}).get("is_flaky", False)
+        for o in current_failures
+    )
     report = render_markdown_report(state, current_failures, job_flakes)
 
     print(report)
@@ -559,8 +587,9 @@ def main(argv: list[str] | None = None) -> int:
             fh.write(f"flaky-count={flaky_count}\n")
             fh.write(f"matched-known-flakes={known_matches}\n")
             fh.write(f"parsed-files={len(matched_files)}\n")
+            fh.write(f"unexplained-failures={unexplained}\n")
 
-    return 0
+    return 1 if args.fail_on_unexplained and unexplained else 0
 
 
 if __name__ == "__main__":

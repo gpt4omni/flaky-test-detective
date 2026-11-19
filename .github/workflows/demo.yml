@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   actions: read
   pull-requests: write
 
@@ -83,6 +83,7 @@ jobs:
         with:
           junit-glob: "examples/demo-run/junit-*.xml"
           state-file: ".flaky-detective/demo-state.json"
+          state-branch: ""
           post-pr-comment: "false"
           write-summary: "true"
 
