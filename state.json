@@ -3,7 +3,7 @@
   "tests": {
     "test_detective.TestFlakyDetective::test_fifty_clean_runs_clears_flaky_flag": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -46,6 +46,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 1,
           "timestamp": "2026-11-19T17:14:14.264928+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0008,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 1,
+          "timestamp": "2026-11-19T17:18:03.080988+00:00"
         }
       ],
       "is_flaky": false,
@@ -53,7 +66,7 @@
     },
     "test_detective.TestFlakyDetective::test_markdown_report_contains_sticky_marker_and_leaderboard": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -96,6 +109,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 7,
           "timestamp": "2026-11-19T17:14:14.265104+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 7,
+          "timestamp": "2026-11-19T17:18:03.081121+00:00"
         }
       ],
       "is_flaky": false,
@@ -103,7 +129,7 @@
     },
     "test_detective.TestFlakyDetective::test_parse_junit_with_sidecar_metadata": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -146,6 +172,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 7,
           "timestamp": "2026-11-19T17:14:14.264965+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0004,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 7,
+          "timestamp": "2026-11-19T17:18:03.081020+00:00"
         }
       ],
       "is_flaky": false,
@@ -153,7 +192,7 @@
     },
     "test_detective.TestFlakyDetective::test_same_sha_rerun_detects_timing_flake": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -196,6 +235,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 8,
           "timestamp": "2026-11-19T17:14:14.265108+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0006,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 8,
+          "timestamp": "2026-11-19T17:18:03.081123+00:00"
         }
       ],
       "is_flaky": false,
@@ -203,7 +255,7 @@
     },
     "test_detective.TestFlakyDetective::test_shard_specific_failure_classified_as_isolation": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -246,6 +298,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 4,
           "timestamp": "2026-11-19T17:14:14.264954+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 4,
+          "timestamp": "2026-11-19T17:18:03.081013+00:00"
         }
       ],
       "is_flaky": false,
@@ -253,7 +318,7 @@
     },
     "test_detective.TestHardening::test_comment_pagination": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -296,6 +361,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 5,
           "timestamp": "2026-11-19T17:14:14.265095+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.004,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 5,
+          "timestamp": "2026-11-19T17:18:03.081115+00:00"
         }
       ],
       "is_flaky": false,
@@ -303,7 +381,7 @@
     },
     "test_detective.TestHardening::test_distinct_reports_preserve_fail_pass_and_reingest_idempotently": {
       "classification": "none",
-      "consecutive_clean_runs": 2,
+      "consecutive_clean_runs": 3,
       "failure_rate": 0.0,
       "first_seen_sha": "3d184e2acac7c8c331feb1a69ed1c7c36d965b8a",
       "flake_events": 0,
@@ -334,6 +412,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 5,
           "timestamp": "2026-11-19T17:14:14.264958+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0012,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 5,
+          "timestamp": "2026-11-19T17:18:03.081016+00:00"
         }
       ],
       "is_flaky": false,
@@ -341,7 +432,7 @@
     },
     "test_detective.TestHardening::test_idempotent_identity": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -384,6 +475,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 1,
           "timestamp": "2026-11-19T17:14:14.265079+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0002,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 1,
+          "timestamp": "2026-11-19T17:18:03.081105+00:00"
         }
       ],
       "is_flaky": false,
@@ -391,7 +495,7 @@
     },
     "test_detective.TestHardening::test_legacy_identity_defaults": {
       "classification": "none",
-      "consecutive_clean_runs": 2,
+      "consecutive_clean_runs": 3,
       "failure_rate": 0.0,
       "first_seen_sha": "3d184e2acac7c8c331feb1a69ed1c7c36d965b8a",
       "flake_events": 0,
@@ -422,6 +526,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 3,
           "timestamp": "2026-11-19T17:14:14.264951+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 3,
+          "timestamp": "2026-11-19T17:18:03.081010+00:00"
         }
       ],
       "is_flaky": false,
@@ -429,7 +546,7 @@
     },
     "test_detective.TestHardening::test_malformed_and_empty_xml": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -472,6 +589,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 2,
           "timestamp": "2026-11-19T17:14:14.265084+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0011,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 2,
+          "timestamp": "2026-11-19T17:18:03.081108+00:00"
         }
       ],
       "is_flaky": false,
@@ -479,7 +609,7 @@
     },
     "test_detective.TestHardening::test_unexplained_gating_and_outputs": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -522,6 +652,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 8,
           "timestamp": "2026-11-19T17:14:14.264969+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0058,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 8,
+          "timestamp": "2026-11-19T17:18:03.081022+00:00"
         }
       ],
       "is_flaky": false,
@@ -529,7 +672,7 @@
     },
     "test_persist_state.TestPersistence::test_disabled_no_repo_and_no_permission": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -572,6 +715,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 6,
           "timestamp": "2026-11-19T17:14:14.265101+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0002,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 6,
+          "timestamp": "2026-11-19T17:18:03.081119+00:00"
         }
       ],
       "is_flaky": false,
@@ -579,7 +735,7 @@
     },
     "test_persist_state.TestPersistence::test_fork_never_pushes": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -622,6 +778,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 9,
           "timestamp": "2026-11-19T17:14:14.264974+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0011,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 9,
+          "timestamp": "2026-11-19T17:18:03.081025+00:00"
         }
       ],
       "is_flaky": false,
@@ -629,7 +798,7 @@
     },
     "test_persist_state.TestPersistence::test_local_bare_origin_roundtrip_merge_and_retry": {
       "classification": "none",
-      "consecutive_clean_runs": 3,
+      "consecutive_clean_runs": 4,
       "failure_rate": 0.0,
       "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
       "flake_events": 0,
@@ -672,6 +841,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 3,
           "timestamp": "2026-11-19T17:14:14.265089+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.3288,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 3,
+          "timestamp": "2026-11-19T17:18:03.081111+00:00"
         }
       ],
       "is_flaky": false,
@@ -679,7 +861,7 @@
     },
     "test_persist_state.TestPersistence::test_merge_keeps_distinct_report_and_order_identities": {
       "classification": "none",
-      "consecutive_clean_runs": 2,
+      "consecutive_clean_runs": 3,
       "failure_rate": 0.0,
       "first_seen_sha": "3d184e2acac7c8c331feb1a69ed1c7c36d965b8a",
       "flake_events": 0,
@@ -710,6 +892,19 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 2,
           "timestamp": "2026-11-19T17:14:14.264945+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 2,
+          "timestamp": "2026-11-19T17:18:03.081006+00:00"
         }
       ],
       "is_flaky": false,
@@ -717,7 +912,7 @@
     },
     "test_persist_state.TestPersistence::test_merge_uses_message_from_newest_failure": {
       "classification": "none",
-      "consecutive_clean_runs": 1,
+      "consecutive_clean_runs": 2,
       "failure_rate": 0.0,
       "first_seen_sha": "f3303c6ddee37f3bd409e2df72712f3dcebaadce",
       "flake_events": 0,
@@ -735,6 +930,19 @@
           "source_report": "shard-results/junit-shard-2.xml",
           "test_order": 4,
           "timestamp": "2026-11-19T17:14:14.265092+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000875",
+          "seed": "42",
+          "shard": "shard-2",
+          "source_report": "shard-results/junit-shard-2.xml",
+          "test_order": 4,
+          "timestamp": "2026-11-19T17:18:03.081113+00:00"
         }
       ],
       "is_flaky": false,
@@ -742,7 +950,7 @@
     },
     "test_persist_state.TestPersistence::test_stale_history_cannot_evict_newer_remote_entries": {
       "classification": "none",
-      "consecutive_clean_runs": 2,
+      "consecutive_clean_runs": 3,
       "failure_rate": 0.0,
       "first_seen_sha": "3d184e2acac7c8c331feb1a69ed1c7c36d965b8a",
       "flake_events": 0,
@@ -773,12 +981,25 @@
           "source_report": "shard-results/junit-shard-1.xml",
           "test_order": 6,
           "timestamp": "2026-11-19T17:14:14.264962+00:00"
+        },
+        {
+          "commit_sha": "71dbcfa02646117131f1145c2a03473c78ad02e9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44575619670",
+          "runner_id": "GitHub Actions 1000000874",
+          "seed": "41",
+          "shard": "shard-1",
+          "source_report": "shard-results/junit-shard-1.xml",
+          "test_order": 6,
+          "timestamp": "2026-11-19T17:18:03.081018+00:00"
         }
       ],
       "is_flaky": false,
       "last_failure_message": ""
     }
   },
-  "updated_at": "2026-11-19T17:14:15.492900+00:00",
+  "updated_at": "2026-11-19T17:18:04.087364+00:00",
   "version": 1
 }
