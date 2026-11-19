@@ -8,17 +8,16 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-from detective import load_state, save_state, update_state
+from detective import load_state, observation_identity, save_state, update_state
 
 
 def merge_state(remote, local, window_size):
     tests = remote.setdefault("tests", {})
-    identity = ("commit_sha", "run_id", "run_attempt", "shard")
     for test_id, record in local["tests"].items():
         target = tests.setdefault(test_id, dict(record, history=[]))
         entries = {}
         for entry in record["history"] + target["history"]:
-            entries[tuple(entry.get(key) for key in identity)] = entry
+            entries[observation_identity(entry)] = entry
         target["history"] = sorted(
             entries.values(), key=lambda entry: entry.get("timestamp", "")
         )[-window_size:]

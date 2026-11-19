@@ -167,6 +167,30 @@ class TestFlakyDetective(unittest.TestCase):
 
 
 class TestHardening(unittest.TestCase):
+    def test_distinct_reports_preserve_fail_pass_and_reingest_idempotently(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            fail = Path(tmp) / "fail.xml"
+            passed = Path(tmp) / "pass.xml"
+            fail.write_text(SAMPLE_FAIL_XML)
+            passed.write_text(SAMPLE_PASS_XML)
+            observations = detective.parse_junit_file(fail) + detective.parse_junit_file(passed)
+            state = {"tests": {}}
+            detective.update_state(state, observations)
+            record = state["tests"]["tests.test_checkout::test_cart_lock"]
+            self.assertTrue(record["is_flaky"])
+            self.assertEqual([entry["source_report"] for entry in record["history"]], [str(fail), str(passed)])
+            detective.update_state(state, observations)
+            self.assertEqual(len(record["history"]), 2)
+            another = detective.TestObservation("tests.test_checkout::test_cart_lock", "passed", source_report=str(passed), test_order=3)
+            detective.update_state(state, [another])
+            self.assertEqual(len(record["history"]), 3)
+
+    def test_legacy_identity_defaults(self):
+        legacy = {"commit_sha": "sha", "run_id": "1", "run_attempt": 1, "shard": "default"}
+        self.assertEqual(detective.observation_identity(legacy), detective.observation_identity(
+            legacy | {"source_report": "", "test_order": 0}
+        ))
+
     def test_idempotent_identity(self):
         state = {"tests": {}}
         first = detective.TestObservation("test", "failed", commit_sha="sha", run_id="1")

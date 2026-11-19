@@ -15,6 +15,20 @@ import persist_state
 
 
 class TestPersistence(unittest.TestCase):
+    def test_merge_keeps_distinct_report_and_order_identities(self):
+        remote = {"tests": {}}
+        local = {"tests": {}}
+        detective.update_state(remote, [detective.TestObservation("test", "failed", source_report="one.xml", test_order=1)])
+        detective.update_state(local, [
+            detective.TestObservation("test", "passed", source_report="two.xml", test_order=1),
+            detective.TestObservation("test", "passed", source_report="two.xml", test_order=2),
+        ])
+        merged = persist_state.merge_state(remote, local, 10)
+        self.assertEqual(len(merged["tests"]["test"]["history"]), 3)
+        self.assertTrue(merged["tests"]["test"]["is_flaky"])
+        persist_state.merge_state(merged, local, 10)
+        self.assertEqual(len(merged["tests"]["test"]["history"]), 3)
+
     def test_stale_history_cannot_evict_newer_remote_entries(self):
         def state_for(start, stop):
             state = {"tests": {}}

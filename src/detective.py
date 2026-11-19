@@ -39,6 +39,7 @@ class TestObservation:
     runner_id: str = ""
     seed: str = ""
     test_order: int = 0
+    source_report: str = ""
     timestamp: str = field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
@@ -127,6 +128,7 @@ def parse_junit_file(
                 runner_id=runner_id,
                 seed=seed,
                 test_order=idx,
+                source_report=str(xml_path),
             )
         )
     return observations
@@ -172,6 +174,14 @@ def classify_flake(history: list[dict[str, Any]]) -> str:
     return "timing/race"
 
 
+def observation_identity(entry: dict[str, Any]) -> tuple:
+    return (
+        entry.get("commit_sha"), entry.get("run_id"),
+        entry.get("run_attempt"), entry.get("shard"),
+        entry.get("source_report", ""), entry.get("test_order", 0),
+    )
+
+
 def update_state(
     state: dict[str, Any],
     observations: list[TestObservation],
@@ -208,12 +218,12 @@ def update_state(
             "runner_id": obs.runner_id,
             "seed": obs.seed,
             "test_order": obs.test_order,
+            "source_report": obs.source_report,
             "duration_sec": obs.duration_sec,
             "timestamp": obs.timestamp,
         }
         history: list[dict[str, Any]] = record["history"]
-        identity = ("commit_sha", "run_id", "run_attempt", "shard")
-        if any(all(h.get(key) == entry[key] for key in identity) for h in history):
+        if any(observation_identity(h) == observation_identity(entry) for h in history):
             continue
         history.append(entry)
         if len(history) > window_size:
