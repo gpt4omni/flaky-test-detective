@@ -1,8 +1,12 @@
 import json
+import contextlib
+import io
+import os
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
@@ -66,7 +70,7 @@ class TestFlakyDetective(unittest.TestCase):
                 p1, commit_sha="deadbeef", default_shard="shard-1", default_seed="7"
             )
             obs2 = detective.parse_junit_file(
-                p2, commit_sha="deadbeef", default_shard="shard-1", default_seed="7"
+                p2, commit_sha="deadbeef", run_attempt=2, default_shard="shard-1", default_seed="7"
             )
 
             state = detective.load_state(Path(tmp) / "state.json")
@@ -122,6 +126,7 @@ class TestFlakyDetective(unittest.TestCase):
                 test_id="tests.test_net::test_retry",
                 outcome="passed",
                 commit_sha="sha-1",
+                run_attempt=2,
             ),
         ]
         for i in range(49):
@@ -149,6 +154,7 @@ class TestFlakyDetective(unittest.TestCase):
             test_id="tests.test_checkout::test_cart_lock",
             outcome="passed",
             commit_sha="abc1234",
+            run_attempt=2,
             shard="shard-1",
         )
         detective.update_state(state, [fail_obs, pass_obs])
@@ -158,6 +164,65 @@ class TestFlakyDetective(unittest.TestCase):
         self.assertIn("Known flake detected", report)
         self.assertIn("Flake Leaderboard", report)
         self.assertIn("tests.test_checkout::test_cart_lock", report)
+
+
+class TestHardening(unittest.TestCase):
+    def test_idempotent_identity(self):
+        state = {"tests": {}}
+        first = detective.TestObservation("test", "failed", commit_sha="sha", run_id="1")
+        detective.update_state(state, [first, first])
+        detective.update_state(state, [first])
+        self.assertEqual(len(state["tests"]["test"]["history"]), 1)
+        for changes in ({"run_attempt": 2}, {"shard": "other"}, {"run_id": "2"}, {"commit_sha": "other"}):
+            detective.update_state(state, [detective.TestObservation(
+                "test", "passed", **({"commit_sha": "sha", "run_id": "1"} | changes)
+            )])
+        self.assertEqual(len(state["tests"]["test"]["history"]), 5)
+        detective.update_state(state, [])
+        self.assertEqual(len(state["tests"]["test"]["history"]), 5)
+
+    def test_malformed_and_empty_xml(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for content in ("", "<testsuite>"):
+                path = Path(tmp) / "broken.xml"
+                path.write_text(content)
+                with contextlib.redirect_stdout(io.StringIO()) as output:
+                    self.assertEqual(detective.parse_junit_file(path), [])
+                self.assertIn(f"::warning file={path}::", output.getvalue())
+
+    def test_unexplained_gating_and_outputs(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {"GITHUB_TOKEN": ""}):
+            root = Path(tmp)
+            xml = root / "report.xml"
+            xml.write_text(SAMPLE_FAIL_XML)
+            output = root / "outputs"
+            args = ["--junit-glob", str(xml), "--state-file", str(root / "state.json")]
+            with patch.dict(os.environ, {"GITHUB_OUTPUT": str(output)}), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(detective.main(args), 0)
+                self.assertEqual(detective.main(args + ["--fail-on-unexplained"]), 1)
+                self.assertIn("unexplained-failures=1", output.read_text())
+                xml.write_text(SAMPLE_PASS_XML)
+                self.assertEqual(detective.main(args + ["--run-attempt", "2", "--fail-on-unexplained"]), 0)
+                xml.write_text(SAMPLE_FAIL_XML)
+                self.assertEqual(detective.main(args + ["--run-attempt", "3", "--fail-on-unexplained"]), 0)
+                self.assertIn("unexplained-failures=0", output.read_text())
+                self.assertEqual(detective.main(["--junit-glob", str(root / "missing*"), "--state-file", str(root / "empty.json"), "--fail-on-unexplained"]), 0)
+
+    def test_comment_pagination(self):
+        def response(payload):
+            result = MagicMock()
+            result.__enter__.return_value.read.return_value = json.dumps(payload).encode()
+            return result
+        for found in (True, False):
+            pages = [response([{"body": "other"}] * 100), response(
+                [{"id": 123, "body": detective.STICKY_MARKER}] if found else []
+            ), response({})]
+            with patch.object(detective.urllib.request, "urlopen", side_effect=pages) as urlopen:
+                self.assertTrue(detective.upsert_pr_comment("owner/repo", 1, "body", "token"))
+                self.assertIn("page=2", urlopen.call_args_list[1].args[0].full_url)
+                self.assertEqual(urlopen.call_args_list[2].args[0].method, "PATCH" if found else "POST")
+        with patch.object(detective.urllib.request, "urlopen", side_effect=detective.urllib.error.URLError("offline")):
+            self.assertFalse(detective.upsert_pr_comment("owner/repo", 1, "body", "token"))
 
 
 if __name__ == "__main__":

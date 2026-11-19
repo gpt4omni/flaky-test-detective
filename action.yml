@@ -15,6 +15,12 @@ inputs:
     description: "Path to the rolling JSON flake state file."
     required: false
     default: ".flaky-detective/state.json"
+  state-branch:
+    description: "Branch storing rolling state; empty disables persistence. Requires contents: write."
+    default: "flaky-detective-state"
+  fail-on-unexplained:
+    description: "Fail when current failures do not match known flakes."
+    default: "false"
   window-size:
     description: "Rolling history window per test."
     required: false
@@ -33,6 +39,9 @@ inputs:
     default: "${{ github.token }}"
 
 outputs:
+  unexplained-failures:
+    description: "Current failures not matching known flakes."
+    value: ${{ steps.detect.outputs.unexplained-failures }}
   flaky-count:
     description: "Number of currently tracked flaky tests."
     value: ${{ steps.detect.outputs.flaky-count }}
@@ -46,6 +55,12 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Restore rolling state
+      shell: bash
+      env:
+        STATE_BRANCH: ${{ inputs.state-branch }}
+        STATE_FILE: ${{ inputs.state-file }}
+      run: python3 "${{ github.action_path }}/src/persist_state.py" load --branch "$STATE_BRANCH" --state-file "$STATE_FILE"
     - name: Run Flaky Test Detective
       id: detect
       shell: bash
@@ -56,6 +71,7 @@ runs:
         INPUT_WINDOW_SIZE: ${{ inputs.window-size }}
         INPUT_POST_PR_COMMENT: ${{ inputs.post-pr-comment }}
         INPUT_WRITE_SUMMARY: ${{ inputs.write-summary }}
+        INPUT_FAIL_ON_UNEXPLAINED: ${{ inputs.fail-on-unexplained }}
       run: |
         args=(
           --junit-glob "$INPUT_JUNIT_GLOB"
@@ -68,4 +84,15 @@ runs:
         if [ "$INPUT_WRITE_SUMMARY" = "true" ]; then
           args+=(--write-summary)
         fi
+        if [ "$INPUT_FAIL_ON_UNEXPLAINED" = "true" ]; then
+          args+=(--fail-on-unexplained)
+        fi
         python3 "${{ github.action_path }}/src/detective.py" "${args[@]}"
+    - name: Persist rolling state
+      if: ${{ always() && steps.detect.outcome != 'skipped' }}
+      shell: bash
+      env:
+        STATE_BRANCH: ${{ inputs.state-branch }}
+        STATE_FILE: ${{ inputs.state-file }}
+        WINDOW_SIZE: ${{ inputs.window-size }}
+      run: python3 "${{ github.action_path }}/src/persist_state.py" save --branch "$STATE_BRANCH" --state-file "$STATE_FILE" --window-size "$WINDOW_SIZE"

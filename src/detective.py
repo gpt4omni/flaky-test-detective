@@ -74,7 +74,12 @@ def parse_junit_file(
     runner_id = str(meta.get("runner_id") or default_runner_id)
     seed = str(meta.get("seed") or default_seed)
 
-    tree = ET.parse(xml_path)
+    try:
+        tree = ET.parse(xml_path)
+    except ET.ParseError as exc:
+        filename = str(xml_path).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A').replace(',', '%2C').replace(':', '%3A')
+        print(f"::warning file={filename}::Invalid JUnit XML: {exc}")
+        return []
     root = tree.getroot()
 
     testcases: list[ET.Element] = []
@@ -207,6 +212,9 @@ def update_state(
             "timestamp": obs.timestamp,
         }
         history: list[dict[str, Any]] = record["history"]
+        identity = ("commit_sha", "run_id", "run_attempt", "shard")
+        if any(all(h.get(key) == entry[key] for key in identity) for h in history):
+            continue
         history.append(entry)
         if len(history) > window_size:
             history[:] = history[-window_size:]
@@ -391,13 +399,18 @@ def upsert_pr_comment(
     list_url = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments?per_page=100"
     existing_id: int | None = None
     try:
-        req = urllib.request.Request(list_url, headers=headers)
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            comments = json.loads(resp.read().decode("utf-8"))
-        for c in comments:
-            if STICKY_MARKER in (c.get("body") or ""):
-                existing_id = int(c["id"])
+        page = 1
+        while True:
+            req = urllib.request.Request(f"{list_url}&page={page}", headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                comments = json.loads(resp.read().decode("utf-8"))
+            for c in comments:
+                if STICKY_MARKER in (c.get("body") or ""):
+                    existing_id = int(c["id"])
+                    break
+            if existing_id is not None or len(comments) < 100:
                 break
+            page += 1
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
         return False
 
@@ -490,6 +503,7 @@ def main(argv: list[str] | None = None) -> int:
         default="",
         help="Optional path to write the rendered Markdown report",
     )
+    parser.add_argument("--fail-on-unexplained", action="store_true")
     args = parser.parse_args(argv)
 
     matched_files = sorted(
@@ -523,6 +537,10 @@ def main(argv: list[str] | None = None) -> int:
     save_state(state_path, state)
 
     current_failures = [o for o in observations if o.outcome == "failed"]
+    unexplained = sum(
+        not state["tests"].get(o.test_id, {}).get("is_flaky", False)
+        for o in current_failures
+    )
     report = render_markdown_report(state, current_failures, job_flakes)
 
     print(report)
@@ -559,8 +577,9 @@ def main(argv: list[str] | None = None) -> int:
             fh.write(f"flaky-count={flaky_count}\n")
             fh.write(f"matched-known-flakes={known_matches}\n")
             fh.write(f"parsed-files={len(matched_files)}\n")
+            fh.write(f"unexplained-failures={unexplained}\n")
 
-    return 0
+    return 1 if args.fail_on_unexplained and unexplained else 0
 
 
 if __name__ == "__main__":
