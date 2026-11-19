@@ -15,6 +15,25 @@ import persist_state
 
 
 class TestPersistence(unittest.TestCase):
+    def test_merge_uses_message_from_newest_failure(self):
+        def state_for(timestamp, message):
+            state = {"tests": {}}
+            detective.update_state(state, [detective.TestObservation(
+                "test", "failed", run_id=timestamp, timestamp=timestamp,
+                message=message,
+            )])
+            return state
+
+        for remote_time, local_time, expected in (("2026-01-01", "2026-01-02", "local"), ("2026-01-03", "2026-01-02", "remote")):
+            remote = state_for(remote_time, "remote")
+            local = state_for(local_time, "local")
+            merged = persist_state.merge_state(remote, local, 10)
+            record = merged["tests"]["test"]
+            self.assertEqual(record["last_failure_message"], expected)
+            self.assertEqual(record["failure_rate"], 1)
+            self.assertEqual(record["consecutive_clean_runs"], 0)
+            self.assertEqual(len(record["history"]), 2)
+
     def test_merge_keeps_distinct_report_and_order_identities(self):
         remote = {"tests": {}}
         local = {"tests": {}}

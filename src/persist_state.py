@@ -15,6 +15,16 @@ def merge_state(remote, local, window_size):
     tests = remote.setdefault("tests", {})
     for test_id, record in local["tests"].items():
         target = tests.setdefault(test_id, dict(record, history=[]))
+        failure_messages = [
+            (entry.get("timestamp", ""), side.get("last_failure_message", ""))
+            for side in (record, target)
+            for entry in side["history"]
+            if entry.get("outcome") == "failed"
+        ]
+        if failure_messages:
+            target["last_failure_message"] = max(
+                failure_messages, key=lambda item: item[0]
+            )[1]
         entries = {}
         for entry in record["history"] + target["history"]:
             entries[observation_identity(entry)] = entry
