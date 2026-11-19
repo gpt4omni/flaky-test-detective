@@ -15,6 +15,25 @@ import persist_state
 
 
 class TestPersistence(unittest.TestCase):
+    def test_stale_history_cannot_evict_newer_remote_entries(self):
+        def state_for(start, stop):
+            state = {"tests": {}}
+            detective.update_state(state, [detective.TestObservation(
+                "test", "failed" if i == 0 else "passed", run_id=str(i),
+                timestamp=f"2026-01-01T00:00:{i:02d}+00:00",
+            ) for i in range(start, stop)])
+            return state
+
+        remote = state_for(5, 8)
+        merged = persist_state.merge_state(remote, state_for(0, 3), 3)
+        record = merged["tests"]["test"]
+        self.assertEqual([entry["run_id"] for entry in record["history"]], ["5", "6", "7"])
+        self.assertEqual(record["failure_rate"], 0)
+        self.assertEqual(record["consecutive_clean_runs"], 3)
+        self.assertFalse(record["is_flaky"])
+        persist_state.merge_state(merged, state_for(5, 8), 3)
+        self.assertEqual(len(record["history"]), 3)
+
     def test_local_bare_origin_roundtrip_merge_and_retry(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

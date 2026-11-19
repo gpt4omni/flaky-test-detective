@@ -8,7 +8,23 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-from detective import TestObservation, load_state, save_state, update_state
+from detective import load_state, save_state, update_state
+
+
+def merge_state(remote, local, window_size):
+    tests = remote.setdefault("tests", {})
+    identity = ("commit_sha", "run_id", "run_attempt", "shard")
+    for test_id, record in local["tests"].items():
+        target = tests.setdefault(test_id, dict(record, history=[]))
+        entries = {}
+        for entry in record["history"] + target["history"]:
+            entries[tuple(entry.get(key) for key in identity)] = entry
+        target["history"] = sorted(
+            entries.values(), key=lambda entry: entry.get("timestamp", "")
+        )[-window_size:]
+    update_state(remote, [])
+    remote["job_flakes"] = local.get("job_flakes", [])
+    return remote
 
 
 def git(*args, cwd=None):
@@ -57,16 +73,7 @@ def persist(mode, branch, state_file, window_size=200):
                     if stored.is_file():
                         save_state(state_path, load_state(stored))
                     return
-                merged = load_state(stored)
-                observations = []
-                for test_id, record in local["tests"].items():
-                    for entry in record["history"]:
-                        observations.append(TestObservation(
-                            test_id=test_id, message=record.get("last_failure_message", ""),
-                            **entry,
-                        ))
-                update_state(merged, observations, window_size=window_size)
-                merged["job_flakes"] = local.get("job_flakes", [])
+                merged = merge_state(load_state(stored), local, window_size)
                 save_state(stored, merged)
                 git("add", "--", "state.json", cwd=worktree)
                 if not git("diff", "--cached", "--name-only", cwd=worktree):
