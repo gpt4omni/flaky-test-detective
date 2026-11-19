@@ -1,0 +1,295 @@
+{
+  "job_flakes": [],
+  "tests": {
+    "test_detective.TestFlakyDetective::test_fifty_clean_runs_clears_flaky_flag": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0012,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000866",
+          "seed": "41",
+          "shard": "shard-1",
+          "test_order": 3,
+          "timestamp": "2026-11-19T17:08:41.981927+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestFlakyDetective::test_markdown_report_contains_sticky_marker_and_leaderboard": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000865",
+          "seed": "42",
+          "shard": "shard-2",
+          "test_order": 5,
+          "timestamp": "2026-11-19T17:08:41.982037+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestFlakyDetective::test_parse_junit_with_sidecar_metadata": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0005,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000866",
+          "seed": "41",
+          "shard": "shard-1",
+          "test_order": 4,
+          "timestamp": "2026-11-19T17:08:41.981931+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestFlakyDetective::test_same_sha_rerun_detects_timing_flake": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0007,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000865",
+          "seed": "42",
+          "shard": "shard-2",
+          "test_order": 2,
+          "timestamp": "2026-11-19T17:08:41.982028+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestFlakyDetective::test_shard_specific_failure_classified_as_isolation": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000866",
+          "seed": "41",
+          "shard": "shard-1",
+          "test_order": 5,
+          "timestamp": "2026-11-19T17:08:41.981934+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestHardening::test_comment_pagination": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0043,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000865",
+          "seed": "42",
+          "shard": "shard-2",
+          "test_order": 3,
+          "timestamp": "2026-11-19T17:08:41.982031+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestHardening::test_idempotent_identity": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0001,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000866",
+          "seed": "41",
+          "shard": "shard-1",
+          "test_order": 6,
+          "timestamp": "2026-11-19T17:08:41.981938+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestHardening::test_malformed_and_empty_xml": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0014,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000865",
+          "seed": "42",
+          "shard": "shard-2",
+          "test_order": 1,
+          "timestamp": "2026-11-19T17:08:41.982024+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_detective.TestHardening::test_unexplained_gating_and_outputs": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0078,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000866",
+          "seed": "41",
+          "shard": "shard-1",
+          "test_order": 1,
+          "timestamp": "2026-11-19T17:08:41.981902+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_persist_state.TestPersistence::test_disabled_no_repo_and_no_permission": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0002,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000865",
+          "seed": "42",
+          "shard": "shard-2",
+          "test_order": 4,
+          "timestamp": "2026-11-19T17:08:41.982034+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_persist_state.TestPersistence::test_fork_never_pushes": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.0013,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000866",
+          "seed": "41",
+          "shard": "shard-1",
+          "test_order": 2,
+          "timestamp": "2026-11-19T17:08:41.981921+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    },
+    "test_persist_state.TestPersistence::test_local_bare_origin_roundtrip_merge_and_retry": {
+      "classification": "none",
+      "consecutive_clean_runs": 1,
+      "failure_rate": 0.0,
+      "first_seen_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+      "flake_events": 0,
+      "flake_rate": 0.0,
+      "history": [
+        {
+          "commit_sha": "aa78361e1e742f77dc0ba970211f841cc27037b9",
+          "duration_sec": 0.3496,
+          "outcome": "passed",
+          "run_attempt": 1,
+          "run_id": "44573894639",
+          "runner_id": "GitHub Actions 1000000865",
+          "seed": "42",
+          "shard": "shard-2",
+          "test_order": 6,
+          "timestamp": "2026-11-19T17:08:41.982041+00:00"
+        }
+      ],
+      "is_flaky": false,
+      "last_failure_message": ""
+    }
+  },
+  "updated_at": "2026-11-19T17:08:42.721579+00:00",
+  "version": 1
+}
